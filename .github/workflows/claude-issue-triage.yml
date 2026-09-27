@@ -25,6 +25,7 @@ jobs:
         uses: anthropics/claude-code-action@v1
         with:
           claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
+          show_full_output: true
           prompt: |
             Analiza el issue #${{ github.event.issue.number }} del repositorio ${{ github.repository }}.
             Este es un proyecto de Tetris en JavaScript vanilla (ver CLAUDE.md para la arquitectura:
@@ -38,9 +39,13 @@ jobs:
                Aplícalas con `gh issue edit ${{ github.event.issue.number }} --add-label "<label>"`
                (una llamada por label). Si el issue ya tiene alguna de estas labels aplicada
                incorrectamente, quítala con `--remove-label`.
-            3. Publica UN comentario en el issue con
-               `gh issue comment ${{ github.event.issue.number }} --body "..."` que contenga,
-               en español, un diagnóstico general:
+            3. Publica UN comentario en el issue con un diagnóstico general en español. Para el
+               cuerpo del comentario, escríbelo primero a un archivo temporal (p.ej.
+               `/tmp/diagnostico.md`) y publícalo con
+               `gh issue comment ${{ github.event.issue.number }} --body-file /tmp/diagnostico.md`
+               — NO uses `--body "$(cat <<EOF ... EOF)"` ni comillas anidadas, ya que esas
+               construcciones de Bash pueden ser bloqueadas por el sistema de permisos. El
+               diagnóstico debe incluir:
                - Resumen del problema en 1-2 frases.
                - Área/archivo probablemente involucrado (index.html, style.css o game.js),
                  citando funciones relevantes si las identificas (p.ej. collide, tryRotate,
@@ -49,4 +54,9 @@ jobs:
                - Enfoque sugerido para la solución (sin implementarla).
                No repitas este comentario si ya existe uno de Claude con diagnóstico en el issue;
                en ese caso actualízalo o añade uno nuevo solo si el issue cambió sustancialmente.
-          claude_args: '--allowedTools "Bash(gh issue view:*),Bash(gh issue edit:*),Bash(gh issue comment:*),Bash(gh issue list:*)"'
+
+            Todos los subcomandos `gh issue ...` (view, edit, comment, list) y `gh label list`
+            están pre-aprobados por el sistema de permisos. Si un comando concreto es denegado,
+            NO te rindas ni dejes el issue sin labels/comentario: reintenta el mismo paso con un
+            comando equivalente permitido (por ejemplo, usando `--body-file` en vez de `--body`).
+          claude_args: '--allowedTools "Bash(gh issue:*),Bash(gh label list:*),Write"'

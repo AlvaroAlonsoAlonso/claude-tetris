@@ -1,0 +1,52 @@
+name: Claude Issue Triage
+
+on:
+  issues:
+    types: [opened, edited]
+
+jobs:
+  triage:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      issues: write
+      id-token: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      - name: Run Claude Issue Triage
+        id: claude-triage
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        uses: anthropics/claude-code-action@v1
+        with:
+          claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
+          prompt: |
+            Analiza el issue #${{ github.event.issue.number }} del repositorio ${{ github.repository }}.
+            Este es un proyecto de Tetris en JavaScript vanilla (ver CLAUDE.md para la arquitectura:
+            index.html, style.css y game.js).
+
+            1. Ejecuta `gh issue view ${{ github.event.issue.number }} --json title,body,labels`
+               para leer el contenido actual del issue.
+            2. Determina qué labels le corresponden, usando SOLO estas labels existentes en el repo
+               (no crees labels nuevas): bug, enhancement, documentation, question, accessibility,
+               good first issue, help wanted, invalid, duplicate, wontfix.
+               Aplícalas con `gh issue edit ${{ github.event.issue.number }} --add-label "<label>"`
+               (una llamada por label). Si el issue ya tiene alguna de estas labels aplicada
+               incorrectamente, quítala con `--remove-label`.
+            3. Publica UN comentario en el issue con
+               `gh issue comment ${{ github.event.issue.number }} --body "..."` que contenga,
+               en español, un diagnóstico general:
+               - Resumen del problema en 1-2 frases.
+               - Área/archivo probablemente involucrado (index.html, style.css o game.js),
+                 citando funciones relevantes si las identificas (p.ej. collide, tryRotate,
+                 clearLines, spawn, loop).
+               - Causa probable.
+               - Enfoque sugerido para la solución (sin implementarla).
+               No repitas este comentario si ya existe uno de Claude con diagnóstico en el issue;
+               en ese caso actualízalo o añade uno nuevo solo si el issue cambió sustancialmente.
+          claude_args: '--allowedTools "Bash(gh issue view:*),Bash(gh issue edit:*),Bash(gh issue comment:*),Bash(gh issue list:*)"'

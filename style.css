@@ -156,6 +156,41 @@ body {
   border-radius: 4px;
 }
 
+/* ---- Skins ---- */
+.skin-select {
+  width: 100%;
+  padding: 5px 8px;
+  background: var(--kbd-bg);
+  color: var(--text);
+  border: 1px solid var(--kbd-border);
+  border-radius: 4px;
+  font-family: inherit;
+  font-size: 12px;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s, border-color 0.2s;
+}
+
+.skin-select:hover,
+.skin-select:focus-visible {
+  border-color: var(--value-color);
+  outline: none;
+}
+
+.skin-select option {
+  background: var(--board-bg);
+  color: var(--text);
+}
+
+body[data-skin="neon"] #board,
+body[data-skin="neon"] #next-canvas {
+  background: #000;
+  border-color: #1f2a44;
+}
+
+body[data-skin="neon"] #board {
+  box-shadow: 0 0 40px rgba(0, 240, 255, 0.25);
+}
+
 /* ---- Controles ---- */
 .controls ul {
   list-style: none;

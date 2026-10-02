@@ -182,6 +182,133 @@ kbd {
   color: var(--kbd-text);
 }
 
+/* ---- Menú de pausa ---- */
+.pause-menu {
+  position: absolute;
+  inset: 0;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--overlay-bg);
+  backdrop-filter: blur(4px);
+  border-radius: 4px;
+}
+
+.pause-menu.hidden {
+  display: none;
+}
+
+.pause-box {
+  min-width: 240px;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 10px;
+  padding: 24px 28px;
+  background: var(--board-bg);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
+  text-align: center;
+}
+
+.pause-title {
+  margin-bottom: 6px;
+  font-size: 28px;
+  font-weight: 800;
+  letter-spacing: 4px;
+  color: var(--overlay-title);
+}
+
+.pause-btn {
+  background: var(--btn-bg);
+  color: var(--btn-text);
+  border: 1px solid transparent;
+  border-radius: 6px;
+  padding: 10px 20px;
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s;
+}
+
+.pause-btn:hover {
+  background: var(--btn-bg-hover);
+}
+
+.pause-btn-secondary {
+  background: transparent;
+  color: var(--text);
+  border-color: var(--border);
+}
+
+.pause-btn-secondary:hover {
+  background: var(--kbd-bg);
+}
+
+.pause-btn:focus-visible,
+.pause-level select:focus-visible {
+  outline: 2px solid var(--value-color);
+  outline-offset: 2px;
+}
+
+.pause-controls {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 10px 12px;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  text-align: left;
+}
+
+.pause-controls[hidden] {
+  display: none;
+}
+
+.pause-controls li {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  color: var(--muted);
+}
+
+.pause-controls li > span {
+  display: inline-flex;
+  gap: 4px;
+  min-width: 72px;
+}
+
+.pause-level {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-top: 4px;
+  font-size: 13px;
+  color: var(--text);
+}
+
+.pause-level select {
+  background: var(--kbd-bg);
+  color: var(--text);
+  border: 1px solid var(--kbd-border);
+  border-radius: 4px;
+  padding: 4px 8px;
+  font-size: 13px;
+  font-family: inherit;
+  cursor: pointer;
+}
+
+.pause-hint {
+  font-size: 11px;
+  color: var(--muted);
+}
+
 /* ---- Overlay ---- */
 .overlay {
   position: absolute;
